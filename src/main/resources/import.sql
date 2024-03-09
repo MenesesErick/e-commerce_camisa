@@ -1,0 +1,2 @@
+insert into promocao (id,nomePromocao,porcentualDesconto,descricaoDesconto) values (1,'CUPOM10', 10.00,'DESCONTO10%');
+insert into promocao (id,nomePromocao,porcentualDesconto,descricaoDesconto) values (2,'CUPOM20', 20.00,'DESCONTO20%');
