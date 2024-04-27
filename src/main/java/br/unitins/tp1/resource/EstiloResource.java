@@ -1,7 +1,7 @@
 package br.unitins.tp1.resource;
 
-import br.unitins.tp1.dto.camisa.CamisaDTO;
-import br.unitins.tp1.service.camisa.CamisaService;
+import br.unitins.tp1.dto.estilo.EstiloDTO;
+import br.unitins.tp1.service.estilo.EstiloService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -18,51 +18,45 @@ import jakarta.ws.rs.core.Response.Status;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/camisas")
-public class CamisaResource {
+@Path("/estilos")
+public class EstiloResource {
 
     @Inject
-    public CamisaService camisaService;
+    public EstiloService estiloService;
 
     @GET
     public Response findAll() {
-        return Response.ok(camisaService.findAll()).build();
+        return Response.ok(estiloService.findAll()).build();
     }
 
     @GET
     @Path("/search/nome/{nome}")
     public Response findByNome(@PathParam("nome") String nome) {
-        return Response.ok(camisaService.findByNome(nome)).build();
-    }
-
-    @GET
-    @Path("/search/descricao/{descricao}")
-    public Response findByDescricao(@PathParam("descricao") String descricao) {
-        return Response.ok(camisaService.findByDescricao(descricao)).build();
+        return Response.ok(estiloService.findByNome(nome)).build();
     }
 
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") Long id, CamisaDTO dto) {
-        camisaService.update(id, dto);
+    public Response update(@PathParam("id") Long id, EstiloDTO dto) {
+        estiloService.update(id, dto);
         return Response.status(Status.NO_CONTENT).build();
     }
 
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
-        camisaService.delete(id);
+        estiloService.delete(id);
         return Response.status(Status.NO_CONTENT).build();
     }
 
     @POST
-    public Response create(@Valid CamisaDTO dto) {
-        return Response.status(Status.CREATED).entity(camisaService.create(dto)).build();
+    public Response create(@Valid EstiloDTO dto) {
+        return Response.status(Status.CREATED).entity(estiloService.create(dto)).build();
     }
 
     @GET
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
-        return Response.ok(camisaService.findById(id)).build();
+        return Response.ok(estiloService.findById(id)).build();
     }
 }

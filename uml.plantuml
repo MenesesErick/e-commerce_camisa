@@ -1,0 +1,152 @@
+@startuml
+
+' Compra
+class Compra {
+    - id: Long
+    - data: LocalDate
+    - total: Double
+}
+
+class ItemCompra {
+    - id: Long
+    - quantidade: Integer
+    - total: Double
+}
+
+' Usuario
+class Usuario {
+    - id: Long
+    - nome: String
+    - email: String
+    - senha: String
+}
+
+class Cliente {
+    - id: Long
+    - cpf: String
+}
+
+class Funcionario {
+    - id: Long
+    - cargo: String
+}
+
+class Endereco {
+    - id: Long
+    - cep: String
+    - logradouro: String
+    - bairro: String
+    - numero: String
+    - complemento: String
+    - cidade: String
+    - estado: String
+}
+
+class Telefone {
+    - id: Long
+    - ddd: String
+    - numero: String
+}
+
+' Camisa
+
+class Camisa {
+    - id: Long
+    - nome: String
+    - descricao: String
+    - cor: String
+    - preco: Double
+    - largura: Integer
+    - comprimento: Integer
+    - estoque: Integer
+}
+
+class Estilo {
+    - id: Long
+    - nome: String
+    - descricao: String
+}
+
+class Material {
+    - id: Long
+    - nome: String
+    - descricao: String
+    - porcentagem: Double
+}
+
+class Fornecedor {
+    - id: Long
+    - nome: String
+    - email: String
+    - telefone: String
+}
+
+enum Sexo {
+    + MASCULINO
+    + FEMININO
+}
+
+' Novas Classes
+
+class Pagamento {
+    - id: Long
+    - valor: Double
+    - metodo: String
+    - status: String
+}
+
+class Avaliacao {
+    - id: Long
+    - texto: String
+    - data: LocalDate
+    - autor: Usuario
+    - nota: Integer
+}
+
+class Marca {
+    - id: Long
+    - nome: String
+}
+
+class Modelo {
+    - id: Long
+    - nome: String
+    - descricao: String
+}
+
+Enum Tamanho {
+    + PEQUENO
+    + MEDIO
+    + GRANDE
+    + EXTRAGRANDE
+}
+
+' Relacionamentos
+
+Compra "*" o--> "1" Pagamento
+ItemCompra "*" o--> "*" Avaliacao
+Usuario "*" o--> "*" Avaliacao
+
+Compra "1" *--> "*" ItemCompra
+Compra "*" o--> "1" Cliente
+Compra "*" o--> "1" Endereco
+ItemCompra "*" o--> "1" Camisa
+
+Usuario "*" *--> "1" Endereco
+Usuario "1" *--> "1" Telefone
+
+Camisa "*" o--> "1" Tamanho
+Camisa "*" o--> "1" Estilo
+Camisa "*" o--> "*" Material
+Camisa "*" o--> "1" Fornecedor
+
+Camisa "*" o--> "1" Marca
+Camisa "*" o--> "1" Modelo
+
+Fornecedor "1" o--> "1" Telefone
+
+Cliente "1"--> "1" Usuario
+Usuario "*" --> "1" Sexo
+Funcionario "1"--> "1" Usuario
+
+@enduml

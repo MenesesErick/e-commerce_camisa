@@ -1,7 +1,7 @@
 package br.unitins.tp1.resource;
 
-import br.unitins.tp1.dto.fornecedor.FornecedorDTO;
-import br.unitins.tp1.service.fornecedor.FornecedorService;
+import br.unitins.tp1.dto.usuario.UsuarioDTO;
+import br.unitins.tp1.service.usuario.UsuarioService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -18,47 +18,49 @@ import jakarta.ws.rs.core.Response.Status;
 
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Path("/fornecedores")
-public class FornecedorResource {
+@Path("/usuarios")
+public class UsuarioResource {
 
     @Inject
-    public FornecedorService fornecedorService;
+    public UsuarioService usuarioService;
+
 
     @GET
     public Response findAll() {
-        return Response.ok(fornecedorService.findAll()).build();
+        return Response.ok(usuarioService.findAll()).build();
     }
 
     @GET
     @Path("/search/nome/{nome}") 
     public Response findByNome(@PathParam("nome") String nome){
-        return Response.ok(fornecedorService.findByNome(nome)).build();
+        return Response.ok(usuarioService.findByNome(nome)).build();
     }
 
+    
 
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") Long id, FornecedorDTO dto) {
-        fornecedorService.update(id, dto);
+    public Response update(@PathParam("id") Long id, UsuarioDTO dto) {
+        usuarioService.update(id, dto);
         return Response.status(Status.NO_CONTENT).build();
     }
 
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
-        fornecedorService.delete(id);
+        usuarioService.delete(id);
         return Response.status(Status.NO_CONTENT).build();
     }
 
     @POST  
-    public Response create(@Valid FornecedorDTO dto){
-        return Response.status(Status.CREATED).entity(fornecedorService.create(dto)).build();
+    public Response create(@Valid UsuarioDTO dto){
+        return Response.status(Status.CREATED).entity(usuarioService.create(dto)).build();
     }
 
     @GET
     @Path("/{id}")
     public Response findById(@PathParam("id")Long id){
-        return Response.ok(fornecedorService.findById(id)).build(); 
+        return Response.ok(usuarioService.findById(id)).build(); 
     }
     
 }
