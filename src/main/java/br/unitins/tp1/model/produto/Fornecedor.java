@@ -2,6 +2,7 @@ package br.unitins.tp1.model.produto;
 
 import br.unitins.tp1.model.DefaultEntity;
 import br.unitins.tp1.model.outros.Telefone;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
@@ -12,7 +13,7 @@ public class Fornecedor extends DefaultEntity {
     private String nome;
     private String gmail;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_telefone")
     private Telefone telefone;
 

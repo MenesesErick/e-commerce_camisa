@@ -3,6 +3,7 @@ package br.unitins.tp1.model.usuario;
 import br.unitins.tp1.model.DefaultEntity;
 import br.unitins.tp1.model.outros.Endereco;
 import br.unitins.tp1.model.outros.Telefone;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -12,20 +13,36 @@ import jakarta.persistence.OneToOne;
 @Entity
 public class Usuario extends DefaultEntity {
 
+    @Column(nullable = false)
     private String nome;
+
+    @Column(unique = true)
+    private String username;
+
+    @Column(nullable = false)
     private String gmail;
+
+    @Column(nullable = false)
     private String senha;
 
-    @Column(name = "sexo")
+    @Column(nullable = false)
     private Sexo sexo;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_endereco", nullable = false)
     private Endereco endereco;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_telefone", nullable = false)
     private Telefone telefone;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getNome() {
         return nome;

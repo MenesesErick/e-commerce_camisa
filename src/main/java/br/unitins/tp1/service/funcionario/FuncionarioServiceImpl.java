@@ -4,9 +4,15 @@ import java.util.List;
 
 import br.unitins.tp1.dto.funcionario.FuncionarioDTO;
 import br.unitins.tp1.dto.funcionario.FuncionarioResponseDTO;
+import br.unitins.tp1.dto.usuario.UsuarioResponseDTO;
+import br.unitins.tp1.model.outros.Endereco;
+import br.unitins.tp1.model.outros.Telefone;
 import br.unitins.tp1.model.usuario.Funcionario;
+import br.unitins.tp1.model.usuario.Sexo;
+import br.unitins.tp1.model.usuario.Usuario;
 import br.unitins.tp1.repository.FuncionarioRepository;
 import br.unitins.tp1.repository.UsuarioRepository;
+import br.unitins.tp1.service.HashService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -22,23 +28,76 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     @Inject
     public UsuarioRepository usuarioRepository;
 
+    @Inject
+    public HashService hashService;
     @Override
     @Transactional
     public FuncionarioResponseDTO create(@Valid FuncionarioDTO dto) {
+    
+        // Criando e configurando as entidades
+        Endereco endereco = new Endereco();
+        endereco.setCep(dto.endereco().cep());
+        endereco.setLogradouro(dto.endereco().logradouro());
+        endereco.setBairro(dto.endereco().bairro());
+        endereco.setNumero(dto.endereco().numero());
+        endereco.setComplemento(dto.endereco().complemeto());
+        endereco.setCidade(dto.endereco().cidade());
+        endereco.setEstado(dto.endereco().estado());
+    
+        Telefone telefone = new Telefone();
+        telefone.setCodigoArea(dto.telefone().codigoArea());
+        telefone.setNumero(dto.telefone().numero());
+    
+        Usuario usuario = new Usuario();
+        usuario.setNome(dto.nome());
+        usuario.setUsername(dto.username());
+        usuario.setGmail(dto.gmail());
+        usuario.setSenha(hashService.getHashSenha(dto.senha())); // gerando o hash da senha
+        usuario.setSexo(Sexo.valueOf(dto.idSexo()));
+        usuario.setEndereco(endereco);
+        usuario.setTelefone(telefone);
+    
+        // Persistir o usuário, que deve persistir endereço e telefone devido ao CascadeType
+        usuarioRepository.persist(usuario);
+    
         Funcionario funcionario = new Funcionario();
         funcionario.setCargo(dto.cargo());
-        funcionario.setUsuario(usuarioRepository.findById(dto.idUsuario()));
-
+        funcionario.setUsuario(usuario);
+    
+        // Persistir o funcionário
         funcionarioRepository.persist(funcionario);
+    
         return FuncionarioResponseDTO.valueOf(funcionario);
     }
+    
 
     @Override
     @Transactional
     public void update(Long id, FuncionarioDTO dto) {
-        Funcionario funcionario = funcionarioRepository.findById(id);
-        funcionario.setCargo(dto.cargo());
-        funcionario.setUsuario(usuarioRepository.findById(dto.idUsuario()));
+        Funcionario funcionarioBanco = funcionarioRepository.findById(id);
+        Usuario usuarioBanco = funcionarioBanco.getUsuario();
+
+        funcionarioBanco.setCargo(dto.cargo());
+
+        usuarioBanco.setNome(dto.nome());
+        usuarioBanco.setGmail(dto.gmail());
+        usuarioBanco.setSenha(hashService.getHashSenha(dto.senha())); // gerando o hash da senha
+        usuarioBanco.setSexo(Sexo.valueOf(dto.idSexo()));
+
+        Endereco endereco = funcionarioBanco.getUsuario().getEndereco();
+        endereco.setCep(dto.endereco().cep());
+        endereco.setLogradouro(dto.endereco().logradouro());
+        endereco.setBairro(dto.endereco().bairro());
+        endereco.setNumero(dto.endereco().numero());
+        endereco.setComplemento(dto.endereco().complemeto());
+        endereco.setCidade(dto.endereco().cidade());
+        endereco.setEstado(dto.endereco().estado());
+
+        Telefone telefone = funcionarioBanco.getUsuario().getTelefone();
+        telefone.setCodigoArea(dto.telefone().codigoArea());
+        telefone.setNumero(dto.telefone().numero());
+
+        funcionarioBanco.setUsuario(usuarioBanco);
 
     }
 
@@ -68,5 +127,11 @@ public class FuncionarioServiceImpl implements FuncionarioService {
                 .stream()
                 .map(e -> FuncionarioResponseDTO.valueOf(e)).toList();
 
+    }
+
+    @Override
+    public UsuarioResponseDTO login(String username, String senha) {
+        Funcionario funcionario = funcionarioRepository.findByUsernameAndSenha(username, senha);
+        return UsuarioResponseDTO.valueOf(funcionario.getUsuario());
     }
 }

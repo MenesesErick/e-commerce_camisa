@@ -2,6 +2,7 @@ package br.unitins.tp1.resource;
 
 import br.unitins.tp1.dto.estilo.EstiloDTO;
 import br.unitins.tp1.service.estilo.EstiloService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -25,18 +26,21 @@ public class EstiloResource {
     public EstiloService estiloService;
 
     @GET
+    @RolesAllowed({"Funcionario", "Cliente"})
     public Response findAll() {
         return Response.ok(estiloService.findAll()).build();
     }
 
     @GET
     @Path("/search/nome/{nome}")
+    @RolesAllowed({"Funcionario", "Cliente"})
     public Response findByNome(@PathParam("nome") String nome) {
         return Response.ok(estiloService.findByNome(nome)).build();
     }
 
     @PUT
     @Path("/{id}")
+    @RolesAllowed({"Funcionario"})
     public Response update(@PathParam("id") Long id, EstiloDTO dto) {
         estiloService.update(id, dto);
         return Response.status(Status.NO_CONTENT).build();
@@ -44,18 +48,21 @@ public class EstiloResource {
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed({"Funcionario"})
     public Response delete(@PathParam("id") Long id) {
         estiloService.delete(id);
         return Response.status(Status.NO_CONTENT).build();
     }
 
     @POST
+    @RolesAllowed({"Funcionario"})
     public Response create(@Valid EstiloDTO dto) {
         return Response.status(Status.CREATED).entity(estiloService.create(dto)).build();
     }
 
     @GET
     @Path("/{id}")
+    @RolesAllowed({"Funcionario", "Cliente"})
     public Response findById(@PathParam("id") Long id) {
         return Response.ok(estiloService.findById(id)).build();
     }

@@ -2,6 +2,7 @@ package br.unitins.tp1.resource;
 
 import br.unitins.tp1.dto.fornecedor.FornecedorDTO;
 import br.unitins.tp1.service.fornecedor.FornecedorService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -25,12 +26,14 @@ public class FornecedorResource {
     public FornecedorService fornecedorService;
 
     @GET
+    @RolesAllowed({"Funcionario", "Cliente"})
     public Response findAll() {
         return Response.ok(fornecedorService.findAll()).build();
     }
 
     @GET
     @Path("/search/nome/{nome}") 
+    @RolesAllowed({"Funcionario", "Cliente"})
     public Response findByNome(@PathParam("nome") String nome){
         return Response.ok(fornecedorService.findByNome(nome)).build();
     }
@@ -38,6 +41,7 @@ public class FornecedorResource {
 
     @PUT
     @Path("/{id}")
+    @RolesAllowed({"Funcionario"})
     public Response update(@PathParam("id") Long id, FornecedorDTO dto) {
         fornecedorService.update(id, dto);
         return Response.status(Status.NO_CONTENT).build();
@@ -45,18 +49,21 @@ public class FornecedorResource {
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed({"Funcionario"})
     public Response delete(@PathParam("id") Long id) {
         fornecedorService.delete(id);
         return Response.status(Status.NO_CONTENT).build();
     }
 
     @POST  
+    @RolesAllowed({"Funcionario"})
     public Response create(@Valid FornecedorDTO dto){
         return Response.status(Status.CREATED).entity(fornecedorService.create(dto)).build();
     }
 
     @GET
     @Path("/{id}")
+    @RolesAllowed({"Funcionario", "Cliente"})
     public Response findById(@PathParam("id")Long id){
         return Response.ok(fornecedorService.findById(id)).build(); 
     }

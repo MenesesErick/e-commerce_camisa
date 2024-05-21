@@ -3,7 +3,6 @@ package br.unitins.tp1.dto.endereco;
 import br.unitins.tp1.model.outros.Endereco;
 
 public record EnderecoResponseDTO(
-        Long id,
         String cep,
         String logradouro,
         String bairro,
@@ -14,7 +13,6 @@ public record EnderecoResponseDTO(
 
     public static EnderecoResponseDTO valueOf(Endereco endereco) {
         return new EnderecoResponseDTO(
-                endereco.getId(),
                 endereco.getCep(),
                 endereco.getLogradouro(),
                 endereco.getBairro(),

@@ -56,11 +56,18 @@ insert into usuario (nome, gmail, senha, sexo, id_telefone, id_endereco)
             values ('euuu', 'euzinhoo@gmail.com', '222', 1, 3, 3);
 insert into usuario (nome, gmail, senha, sexo, id_telefone, id_endereco) 
             values ('user2', 'user2@gmail.com', '444', 2, 4, 1);
-insert into usuario (nome, gmail, senha, sexo, id_telefone, id_endereco) 
-            values ('eu', 'euzão@gmail.com', '222', 1, 5, 4);
+insert into usuario (nome, gmail, senha, sexo, id_telefone, id_endereco, username) 
+            values ('eu', 'euzão@gmail.com', 'GU5e4piE62AOdQr2e5/r0In9A7OJ89TjYO0SxgzZysU5HyEtOo2uzOiH3xUqXEQXEWXQCTkB/LQeiS4m0bFs7w==', 1, 5, 4,'programador');
+
 
 insert into cliente (cpf, id_usuario) values ('745896123', 1);
 insert into cliente (cpf, id_usuario) values ('123789456', 2);
 
 insert into funcionario (cargo, id_usuario) values ('admiro', 3);
 insert into funcionario (cargo, id_usuario) values ('ti', 4);
+
+
+insert into usuario (nome, gmail, senha, sexo, id_telefone, id_endereco, username) 
+            values ('admer', 'adminis@gmail.com', '123', 2,8, 1, 'admin');
+
+insert into funcionario (cargo, id_usuario) values ('administrador', 5);

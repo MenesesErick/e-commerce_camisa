@@ -2,6 +2,7 @@ package br.unitins.tp1.resource;
 
 import br.unitins.tp1.dto.material.MaterialDTO;
 import br.unitins.tp1.service.material.MaterialService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -25,12 +26,14 @@ public class MaterialResource {
     public MaterialService materialService;
 
     @GET
+    @RolesAllowed({"Funcionario", "Cliente"})
     public Response findAll() {
         return Response.ok(materialService.findAll()).build();
     }
 
     @GET
     @Path("/search/nome/{nome}") 
+    @RolesAllowed({"Funcionario", "Cliente"})
     public Response findByNome(@PathParam("nome") String nome){
         return Response.ok(materialService.findByNome(nome)).build();
     }
@@ -38,6 +41,7 @@ public class MaterialResource {
 
     @PUT
     @Path("/{id}")
+    @RolesAllowed({"Funcionario"})
     public Response update(@PathParam("id") Long id, MaterialDTO dto) {
         materialService.update(id, dto);
         return Response.status(Status.NO_CONTENT).build();
@@ -45,18 +49,21 @@ public class MaterialResource {
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed({"Funcionario"})
     public Response delete(@PathParam("id") Long id) {
         materialService.delete(id);
         return Response.status(Status.NO_CONTENT).build();
     }
 
     @POST  
+    @RolesAllowed({"Funcionario"})
     public Response create(@Valid MaterialDTO dto){
         return Response.status(Status.CREATED).entity(materialService.create(dto)).build();
     }
 
     @GET
     @Path("/{id}")
+    @RolesAllowed({"Funcionario", "Cliente"})
     public Response findById(@PathParam("id")Long id){
         return Response.ok(materialService.findById(id)).build(); 
     }

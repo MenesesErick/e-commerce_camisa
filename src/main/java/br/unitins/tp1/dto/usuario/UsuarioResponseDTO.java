@@ -8,8 +8,8 @@ import br.unitins.tp1.model.usuario.Usuario;
 public record UsuarioResponseDTO(
     Long id,
     String nome, 
+    String username,
     String gmail,  
-    String senha,
     Sexo sexo,
     EnderecoResponseDTO endereco,
     TelefoneResponseDTO telefone
@@ -20,8 +20,8 @@ public record UsuarioResponseDTO(
         return new UsuarioResponseDTO(
             usuario.getId(),
             usuario.getNome(),
+            usuario.getUsername(),
             usuario.getGmail(),
-            usuario.getSenha(),
             usuario.getSexo(),
             EnderecoResponseDTO.valueOf(usuario.getEndereco()),
             TelefoneResponseDTO.valueOf(usuario.getTelefone())
