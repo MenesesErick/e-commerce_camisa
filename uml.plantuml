@@ -1,13 +1,13 @@
 @startuml
 
-' Compra
-class Compra {
+' Pedido
+class Pedido {
     - id: Long
     - data: LocalDate
     - total: Double
 }
 
-class ItemCompra {
+class ItemPedido {
     - id: Long
     - quantidade: Integer
     - total: Double
@@ -123,14 +123,14 @@ Enum Tamanho {
 
 ' Relacionamentos
 
-Compra "*" o--> "1" Pagamento
-ItemCompra "*" o--> "*" Avaliacao
+Pedido "*" o--> "1" Pagamento
+ItemPedido "*" o--> "*" Avaliacao
 Usuario "*" o--> "*" Avaliacao
 
-Compra "1" *--> "*" ItemCompra
-Compra "*" o--> "1" Cliente
-Compra "*" o--> "1" Endereco
-ItemCompra "*" o--> "1" Camisa
+Pedido "1" *--> "*" ItemPedido
+Pedido "*" o--> "1" Cliente
+Pedido "*" o--> "1" Endereco
+ItemPedido "*" o--> "1" Camisa
 
 Usuario "*" *--> "1" Endereco
 Usuario "1" *--> "1" Telefone

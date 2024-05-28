@@ -82,6 +82,12 @@
     <artifactId>quarkus-smallrye-jwt-build</artifactId>
   </dependency>
 
+  <!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-multipart-provider -->
+  <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-multipart-provider</artifactId>
+  </dependency>
+
   </dependencies>
   <build>
     <plugins>

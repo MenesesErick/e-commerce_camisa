@@ -22,7 +22,8 @@ public record CamisaResponseDTO(
         FornecedorResponseDTO fornecedor,
         EstiloResponseDTO fstilo,
         MarcaResponseDTO marca,
-        List <MaterialResponseDTO> listaMaterial) {
+        List <MaterialResponseDTO> listaMaterial,
+        String nomeImagem) {
 
     public static CamisaResponseDTO valueOf(Camisa camisa) {
         return new CamisaResponseDTO(
@@ -38,7 +39,8 @@ public record CamisaResponseDTO(
                 FornecedorResponseDTO.valueOf(camisa.getFornecedor()),
                 EstiloResponseDTO.valueOf(camisa.getEstilo()),
                 MarcaResponseDTO.valueOf(camisa.getMarca()),
-                camisa.getListaMaterial().stream().map(r -> MaterialResponseDTO.valueOf(r)).toList()); 
+                camisa.getListaMaterial().stream().map(r -> MaterialResponseDTO.valueOf(r)).toList(),
+                camisa.getNomeImagem());
     }
 
 }

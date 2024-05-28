@@ -24,6 +24,8 @@ public class Camisa extends DefaultEntity {
     @Column(name = "tamanho")
     private Tamanho tamanho;
 
+    private String nomeImagem;
+
     @ManyToOne
     @JoinColumn(name = "id_fornecedor", nullable = false)
     private Fornecedor fornecedor;
@@ -42,6 +44,13 @@ public class Camisa extends DefaultEntity {
     inverseJoinColumns = @JoinColumn(name="id_material"))
     private List<Material> listaMaterial;
 
+    public String getNomeImagem() {
+        return nomeImagem;
+    }
+
+    public void setNomeImagem(String nomeImagem) {
+        this.nomeImagem = nomeImagem;
+    }
     public String getNome() {
         return nome;
     }
