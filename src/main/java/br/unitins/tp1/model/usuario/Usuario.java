@@ -19,7 +19,6 @@ public class Usuario extends DefaultEntity {
     @Column(unique = true)
     private String username;
 
-    @Column(nullable = false)
     private String gmail;
 
     @Column(nullable = false)
@@ -29,11 +28,11 @@ public class Usuario extends DefaultEntity {
     private Sexo sexo;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_endereco", nullable = false)
+    @JoinColumn(name = "id_endereco")
     private Endereco endereco;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_telefone", nullable = false)
+    @JoinColumn(name = "id_telefone")
     private Telefone telefone;
 
     public String getUsername() {

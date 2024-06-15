@@ -34,8 +34,15 @@ public class HashServiceImpl implements HashService {
 
     public static void main(String[] args) {
         HashService hash = new HashServiceImpl();
+        System.out.println(hash.getHashSenha("1234"));
+        System.out.println(hash.getHashSenha("1234"));
         System.out.println(hash.getHashSenha("123"));
         System.out.println(hash.getHashSenha("123"));
         System.out.println(hash.getHashSenha("123"));
+    }
+
+    @Override 
+    public boolean verificar(String senha, String hash){
+        return getHashSenha(senha).equals(hash);
     }
 }

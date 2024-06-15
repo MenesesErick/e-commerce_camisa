@@ -1,5 +1,7 @@
 package br.unitins.tp1.resource;
 
+import org.jboss.logging.Logger;
+
 import br.unitins.tp1.dto.estilo.EstiloDTO;
 import br.unitins.tp1.service.estilo.EstiloService;
 import jakarta.annotation.security.RolesAllowed;
@@ -25,45 +27,79 @@ public class EstiloResource {
     @Inject
     public EstiloService estiloService;
 
+    private static final Logger LOG = Logger.getLogger(EstiloResource.class);
+
     @GET
-    @RolesAllowed({"Funcionario", "Cliente"})
+    @RolesAllowed({ "Funcionario", "Cliente" })
     public Response findAll() {
+        LOG.infof("Executando o findAll");
         return Response.ok(estiloService.findAll()).build();
     }
 
     @GET
     @Path("/search/nome/{nome}")
-    @RolesAllowed({"Funcionario", "Cliente"})
+    @RolesAllowed({ "Funcionario", "Cliente" })
     public Response findByNome(@PathParam("nome") String nome) {
+        LOG.infof("Buscando por nome");
         return Response.ok(estiloService.findByNome(nome)).build();
     }
 
     @PUT
     @Path("/{id}")
-    @RolesAllowed({"Funcionario"})
+    @RolesAllowed({ "Funcionario" })
     public Response update(@PathParam("id") Long id, EstiloDTO dto) {
-        estiloService.update(id, dto);
-        return Response.status(Status.NO_CONTENT).build();
+        LOG.infof("Atualizando estilo");
+
+        try {
+            estiloService.update(id, dto);
+            Response response = Response.status(Status.NO_CONTENT).build();
+            LOG.infof("Atulizção concluida");
+            return response;
+
+        } catch (Exception e) {
+            LOG.errorf("Erro ao atualizar estilo");
+            return null;
+        }
     }
 
     @DELETE
     @Path("/{id}")
-    @RolesAllowed({"Funcionario"})
+    @RolesAllowed({ "Funcionario" })
     public Response delete(@PathParam("id") Long id) {
-        estiloService.delete(id);
-        return Response.status(Status.NO_CONTENT).build();
+        LOG.infof("Deletando estilo");
+        try {
+            estiloService.delete(id);
+            Response response = Response.status(Status.NO_CONTENT).build();
+            LOG.infof("Estilo deletado");
+            return response;
+
+        } catch (Exception e) {
+            LOG.errorf("Erro ao deletar estilo");
+            return null;
+        }
     }
 
     @POST
-    @RolesAllowed({"Funcionario"})
+    @RolesAllowed({ "Funcionario" })
     public Response create(@Valid EstiloDTO dto) {
-        return Response.status(Status.CREATED).entity(estiloService.create(dto)).build();
+        LOG.infof("Criando estilo");
+        try {
+            Response response = Response.status(Status.CREATED).entity(estiloService.create(dto)).build();
+            LOG.infof("Estilo criado");
+            return response;
+
+        } catch (Exception e) {
+            LOG.errorf("Erro ao criar estilo");
+            return null;
+
+        }
     }
 
     @GET
     @Path("/{id}")
-    @RolesAllowed({"Funcionario", "Cliente"})
+    @RolesAllowed({ "Funcionario", "Cliente" })
     public Response findById(@PathParam("id") Long id) {
+        LOG.infof("Executando o FindById");
         return Response.ok(estiloService.findById(id)).build();
     }
 }

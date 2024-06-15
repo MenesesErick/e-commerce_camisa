@@ -1,5 +1,7 @@
 package br.unitins.tp1.resource;
 
+import org.jboss.logging.Logger;
+
 import br.unitins.tp1.dto.material.MaterialDTO;
 import br.unitins.tp1.service.material.MaterialService;
 import jakarta.annotation.security.RolesAllowed;
@@ -25,46 +27,79 @@ public class MaterialResource {
     @Inject
     public MaterialService materialService;
 
+    private static final Logger LOG = Logger.getLogger(MaterialResource.class);
+
     @GET
-    @RolesAllowed({"Funcionario", "Cliente"})
+    @RolesAllowed({ "Funcionario", "Cliente" })
     public Response findAll() {
+        LOG.infof("Executando o findAll");
         return Response.ok(materialService.findAll()).build();
     }
 
     @GET
-    @Path("/search/nome/{nome}") 
-    @RolesAllowed({"Funcionario", "Cliente"})
-    public Response findByNome(@PathParam("nome") String nome){
+    @Path("/search/nome/{nome}")
+    @RolesAllowed({ "Funcionario", "Cliente" })
+    public Response findByNome(@PathParam("nome") String nome) {
+        LOG.infof("Buscando por nome");
         return Response.ok(materialService.findByNome(nome)).build();
     }
 
-
     @PUT
     @Path("/{id}")
-    @RolesAllowed({"Funcionario"})
+    @RolesAllowed({ "Funcionario" })
     public Response update(@PathParam("id") Long id, MaterialDTO dto) {
-        materialService.update(id, dto);
-        return Response.status(Status.NO_CONTENT).build();
+        LOG.infof("Atualizando material");
+
+        try {
+            materialService.update(id, dto);
+            Response response = Response.status(Status.NO_CONTENT).build();
+            LOG.infof("Atulizção concluida");
+            return response;
+
+        } catch (Exception e) {
+            LOG.errorf("Erro ao atualizar material");
+            return null;
+        }
     }
 
     @DELETE
     @Path("/{id}")
-    @RolesAllowed({"Funcionario"})
+    @RolesAllowed({ "Funcionario" })
     public Response delete(@PathParam("id") Long id) {
-        materialService.delete(id);
-        return Response.status(Status.NO_CONTENT).build();
+        LOG.infof("Deletando material");
+        try {
+            materialService.delete(id);
+            Response response = Response.status(Status.NO_CONTENT).build();
+            LOG.infof("Material deletado");
+            return response;
+
+        } catch (Exception e) {
+            LOG.errorf("Erro ao deletar material");
+            return null;
+        }
     }
 
-    @POST  
-    @RolesAllowed({"Funcionario"})
-    public Response create(@Valid MaterialDTO dto){
-        return Response.status(Status.CREATED).entity(materialService.create(dto)).build();
+    @POST
+    @RolesAllowed({ "Funcionario" })
+    public Response create(@Valid MaterialDTO dto) {
+        LOG.infof("Criando material");
+        try {
+            Response response = Response.status(Status.CREATED).entity(materialService.create(dto)).build();
+            LOG.infof("Material criado");
+            return response;
+
+        } catch (Exception e) {
+            LOG.errorf("Erro ao criar material");
+            return null;
+
+        }
     }
 
     @GET
     @Path("/{id}")
-    @RolesAllowed({"Funcionario", "Cliente"})
-    public Response findById(@PathParam("id")Long id){
-        return Response.ok(materialService.findById(id)).build(); 
+    @RolesAllowed({ "Funcionario", "Cliente" })
+    public Response findById(@PathParam("id") Long id) {
+        LOG.infof("Executando o findById");
+        return Response.ok(materialService.findById(id)).build();
     }
 }

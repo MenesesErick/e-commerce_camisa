@@ -88,19 +88,15 @@ enum Sexo {
 
 ' Novas Classes
 
-class Pagamento {
-    - id: Long
-    - valor: Double
-    - metodo: String
-    - status: String
+enum TipoPagamento {
+    + DEBITO
+    + CREDITO
+    + PIX
 }
 
-class Avaliacao {
-    - id: Long
-    - texto: String
-    - data: LocalDate
-    - autor: Usuario
-    - nota: Integer
+enum Status{
+    + PENDENTE
+    + PAGO
 }
 
 class Marca {
@@ -123,9 +119,9 @@ Enum Tamanho {
 
 ' Relacionamentos
 
-Pedido "*" o--> "1" Pagamento
-ItemPedido "*" o--> "*" Avaliacao
-Usuario "*" o--> "*" Avaliacao
+Pedido "*" o--> "1" TipoPagamento
+Pedido "*" --> "1" Status
+
 
 Pedido "1" *--> "*" ItemPedido
 Pedido "*" o--> "1" Cliente

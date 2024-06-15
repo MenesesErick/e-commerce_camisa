@@ -4,4 +4,6 @@ public interface HashService {
 
     String getHashSenha(String senha);
 
+    boolean verificar(String senha, String hash);
+
 }

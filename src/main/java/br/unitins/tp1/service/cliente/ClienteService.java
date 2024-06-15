@@ -2,6 +2,8 @@ package br.unitins.tp1.service.cliente;
 
 import java.util.List;
 
+import br.unitins.tp1.dto.AtualizarSenhaDTO;
+import br.unitins.tp1.dto.AtualizarUsernameDTO;
 import br.unitins.tp1.dto.cliente.ClienteDTO;
 import br.unitins.tp1.dto.cliente.ClienteResponseDTO;
 import br.unitins.tp1.dto.usuario.UsuarioResponseDTO;
@@ -22,5 +24,9 @@ public interface ClienteService {
     public List<ClienteResponseDTO> findByCpf(String cpf);
 
     public UsuarioResponseDTO login(String username, String senha);
+
+    public void atualizarSenha(Long id, AtualizarSenhaDTO AtualizarSenhaDTO);
+
+    public void atualizarUsername(Long id, AtualizarUsernameDTO AtualizarUsernameDTO);
 
 }

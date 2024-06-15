@@ -1,5 +1,7 @@
 package br.unitins.tp1.resource;
 
+import org.jboss.logging.Logger;
+
 import br.unitins.tp1.dto.funcionario.FuncionarioDTO;
 import br.unitins.tp1.service.funcionario.FuncionarioService;
 import jakarta.inject.Inject;
@@ -24,39 +26,71 @@ public class FuncionarioResource {
     @Inject
     public FuncionarioService funcionarioService;
 
+    private static final Logger LOG = Logger.getLogger(FuncionarioResource.class);
+
     @GET
     public Response findAll() {
+        LOG.infof("Executando finAll");
         return Response.ok(funcionarioService.findAll()).build();
     }
 
     @GET
     @Path("/search/cargo/{cargo}")
     public Response findByCargo(@PathParam("cargo") String cargo) {
+        LOG.infof("Executando findByCargo");
         return Response.ok(funcionarioService.findByCargo(cargo)).build();
     }
 
     @PUT
     @Path("/{id}")
     public Response update(@PathParam("id") Long id, FuncionarioDTO dto) {
-        funcionarioService.update(id, dto);
-        return Response.status(Status.NO_CONTENT).build();
+        LOG.infof("Executando update de funcionario");
+        try {
+            funcionarioService.update(id, dto);
+            Response response = Response.status(Status.NO_CONTENT).build();
+            LOG.infof("Update de funcionario concluido");
+            return response;
+
+        } catch (Exception e) {
+            LOG.errorf("Erro ao Atualizar funcionario");
+            return null;
+        }
     }
 
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) {
-        funcionarioService.delete(id);
-        return Response.status(Status.NO_CONTENT).build();
+        LOG.infof("Deletando funcionario");
+        try {
+            funcionarioService.delete(id);
+            Response response = Response.status(Status.NO_CONTENT).build();
+            LOG.infof("Funcionario deletado");
+            return response;
+
+        } catch (Exception e) {
+            LOG.errorf("Erro ao deletar Funcionario");
+            return null;
+        }
     }
 
     @POST
     public Response create(@Valid FuncionarioDTO dto) {
-        return Response.status(Status.CREATED).entity(funcionarioService.create(dto)).build();
+        LOG.infof("Criando funcionario");
+        try {
+            Response response = Response.status(Status.CREATED).entity(funcionarioService.create(dto)).build();
+            LOG.infof("Funcionario Criado");
+            return response;
+
+        } catch (Exception e) {
+            LOG.errorf("Erro ao criar funcionario");
+            return null;
+        }
     }
 
     @GET
     @Path("/{id}")
     public Response findById(@PathParam("id") Long id) {
+        LOG.infof("Executando FindById");
         return Response.ok(funcionarioService.findById(id)).build();
     }
 

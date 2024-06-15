@@ -6,8 +6,7 @@ import br.unitins.tp1.dto.itemPedido.ItemPedidoDTO;
 
 public record PedidoDTO (
     Long idCliente,
-    Double desconto,
-    Integer idTipoPagamento,
-    List<ItemPedidoDTO> itens) 
+    List<ItemPedidoDTO> itens,
+    Integer idPagamento)
 { }
 

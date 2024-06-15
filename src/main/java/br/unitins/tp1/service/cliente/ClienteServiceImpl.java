@@ -2,6 +2,10 @@ package br.unitins.tp1.service.cliente;
 
 import java.util.List;
 
+import org.eclipse.microprofile.jwt.JsonWebToken;
+
+import br.unitins.tp1.dto.AtualizarSenhaDTO;
+import br.unitins.tp1.dto.AtualizarUsernameDTO;
 import br.unitins.tp1.dto.cliente.ClienteDTO;
 import br.unitins.tp1.dto.cliente.ClienteResponseDTO;
 import br.unitins.tp1.dto.usuario.UsuarioResponseDTO;
@@ -19,6 +23,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.NotFoundException;
 
 @ApplicationScoped
 public class ClienteServiceImpl implements ClienteService {
@@ -31,6 +36,9 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Inject
     public HashService hashService;
+
+    @Inject
+    JsonWebToken jwt;
 
     @Override
     @Transactional
@@ -45,11 +53,11 @@ public class ClienteServiceImpl implements ClienteService {
         endereco.setComplemento(dto.endereco().complemeto());
         endereco.setCidade(dto.endereco().cidade());
         endereco.setEstado(dto.endereco().estado());
-    
+
         Telefone telefone = new Telefone();
         telefone.setCodigoArea(dto.telefone().codigoArea());
         telefone.setNumero(dto.telefone().numero());
-    
+
         Usuario usuario = new Usuario();
         usuario.setNome(dto.nome());
         usuario.setUsername(dto.username());
@@ -74,7 +82,7 @@ public class ClienteServiceImpl implements ClienteService {
     public void update(Long id, ClienteDTO dto) {
         Cliente clienteBanco = clienteRepository.findById(id);
         Usuario usuarioBanco = clienteBanco.getUsuario();
-        
+
         clienteBanco.setCpf(dto.cpf());
 
         usuarioBanco.setNome(dto.nome());
@@ -94,14 +102,14 @@ public class ClienteServiceImpl implements ClienteService {
         Telefone telefone = clienteBanco.getUsuario().getTelefone();
         telefone.setCodigoArea(dto.telefone().codigoArea());
         telefone.setNumero(dto.telefone().numero());
-        
+
         clienteBanco.setUsuario(usuarioBanco);
     }
 
     public void validarCpf(String cpf) {
         Cliente cliente = clienteRepository.validarCpf(cpf);
         if (cliente != null)
-            throw  new ValidationException("pessoa.cpf", "O cpf '"+ cpf +"' já existe.");
+            throw new ValidationException("pessoa.cpf", "O cpf '" + cpf + "' já existe.");
     }
 
     @Override
@@ -138,4 +146,35 @@ public class ClienteServiceImpl implements ClienteService {
         return UsuarioResponseDTO.valueOf(cliente.getUsuario());
     }
 
+    @Override
+    @Transactional
+    public void atualizarSenha(Long id, AtualizarSenhaDTO dto) {
+        Cliente cliente = clienteRepository.findById(id);
+        String hashSenhaAntiga = hashService.getHashSenha(dto.senhaAntiga());
+
+        if (cliente != null) {
+            if (cliente.getUsuario().getSenha().equals(hashSenhaAntiga)) {
+                String hashNovaSenha = hashService.getHashSenha(dto.novaSenha());
+                cliente.getUsuario().setSenha(hashNovaSenha);
+            } else {
+                throw new ValidationException("ERRO", "Senha antiga nao corresponde");
+            }
+        } else {
+            throw new NotFoundException();
+        }
+    
+    }
+
+    @Override
+    @Transactional
+    public void atualizarUsername(Long id, AtualizarUsernameDTO dto) {
+        
+        Cliente cliente = clienteRepository.findById(id);
+
+        if (cliente != null) {
+            cliente.getUsuario().setUsername(dto.novoUsername());;
+        } else {
+            throw new NotFoundException();
+        }
+    }
 }

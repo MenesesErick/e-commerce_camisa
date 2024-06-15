@@ -2,6 +2,8 @@ package br.unitins.tp1.service.funcionario;
 
 import java.util.List;
 
+import br.unitins.tp1.dto.AtualizarSenhaDTO;
+import br.unitins.tp1.dto.AtualizarUsernameDTO;
 import br.unitins.tp1.dto.funcionario.FuncionarioDTO;
 import br.unitins.tp1.dto.funcionario.FuncionarioResponseDTO;
 import br.unitins.tp1.dto.usuario.UsuarioResponseDTO;
@@ -22,5 +24,9 @@ public interface FuncionarioService {
     public List<FuncionarioResponseDTO> findByCargo(String cargo);
 
     public UsuarioResponseDTO login(String username, String senha);
+
+    public void AtualizarSenha(Long id, AtualizarSenhaDTO AtualizarSenhaDTO);
+
+    public void AtualizarUsername(Long id, AtualizarUsernameDTO AtualizarUsernameDTO);
     
 }

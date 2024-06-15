@@ -19,7 +19,7 @@ import jakarta.ws.rs.core.Response.Status;
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/auth")
 public class AuthResource {
-
+/*
     @Inject
     public FuncionarioService funcionarioService;
 
@@ -34,20 +34,61 @@ public class AuthResource {
 
     @POST
     public Response login(AuthUsuarioDTO dto) {
-        String hash = hashService.getHashSenha(dto.senha());
+        try {
+            String hash = hashService.getHashSenha(dto.senha());
 
-        UsuarioResponseDTO usuario = null;
-        // perfil 1 = funcionario
-        if (dto.perfil() == 1) {
-            usuario = funcionarioService.login(dto.username(), hash);
-        } else if (dto.perfil() == 2) { // cliente
-           usuario = clienteService.login(dto.username(), hash);
-        } else {
-            return Response.status(Status.NOT_FOUND).build();
+            UsuarioResponseDTO usuario = null;
+            // perfil 1 = funcionario
+            if (dto.perfil() == 1) {
+                usuario = funcionarioService.login(dto.username(), hash);
+            } else if (dto.perfil() == 2) { // cliente
+                usuario = clienteService.login(dto.username(), hash);
+            } else {
+                return Response.status(Status.NOT_FOUND).build();
+            }
+            return Response.ok(usuario)
+                    .header("Authorization", jwtService.generateJwt(usuario, dto.perfil()))
+                    .build();
+        } catch (Exception e) {
+            throw new ValidationException("Verificando...", "A senha está incorreta. Tente novamente.");
         }
-        return Response.ok(usuario)
-                .header("Authorization", jwtService.generateJwt(usuario, dto.perfil()))
-                .build();
+    }
+*/
+@Inject
+public ClienteService clienteService;
+
+@Inject
+public FuncionarioService funcionarioService;
+
+@Inject
+public HashService hashService;
+
+@Inject
+JwtService jwtService;
+
+@POST
+public Response login(AuthUsuarioDTO dto){
+    String hashSenha = hashService.getHashSenha(dto.senha());
+
+    UsuarioResponseDTO usuario = null;
+
+    if(dto.perfil() == 1){
+        usuario = funcionarioService.login(dto.username(), hashSenha);
+        // funcionario
+    } else if (dto.perfil() == 2){
+        usuario = clienteService.login(dto.username(), hashSenha);
+        // cliente
+    } else {
+        return Response.status(Status.NOT_FOUND).header("Perfil", "perfis existentes: 1-cliente | 2-funcionario").build();
     }
 
+    if(usuario != null){
+        return Response.ok(usuario).header("Authorization", jwtService.generateJwt(dto, usuario))
+                        .status(Status.CREATED)
+                        .build();
+    } else {
+        return Response.status(Status.NOT_FOUND).build();
+    }
+    
+}
 }

@@ -2,6 +2,8 @@ package br.unitins.tp1.resource;
 
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
+import org.jboss.logging.Logger;
+
 import br.unitins.tp1.dto.camisa.CamisaDTO;
 import br.unitins.tp1.form.ImageForm;
 import br.unitins.tp1.service.camisa.CamisaFileServiceImpl;
@@ -28,6 +30,8 @@ import jakarta.ws.rs.core.Response.Status;
 @Path("/camisas")
 public class CamisaResource {
 
+    private static final Logger LOG = Logger.getLogger(CamisaResource.class);
+
     @Inject
     public CamisaFileServiceImpl fileService;
 
@@ -35,60 +39,92 @@ public class CamisaResource {
     public CamisaService camisaService;
 
     @GET
-    @RolesAllowed({"Funcionario", "Cliente"})
+    @RolesAllowed({ "Funcionario", "Cliente" })
     public Response findAll() {
+        LOG.infof("Executando o findAll");
         return Response.ok(camisaService.findAll()).build();
     }
 
-    
     @GET
     @Path("/search/nome/{nome}")
-    @RolesAllowed({"Funcionario", "Cliente"})
+    @RolesAllowed({ "Funcionario", "Cliente" })
     public Response findByNome(@PathParam("nome") String nome) {
+        LOG.infof("Buscando por Nome");
         return Response.ok(camisaService.findByNome(nome)).build();
     }
 
     @GET
     @Path("/search/descricao/{descricao}")
-    @RolesAllowed({"Funcionario", "Cliente"})
+    @RolesAllowed({ "Funcionario", "Cliente" })
     public Response findByDescricao(@PathParam("descricao") String descricao) {
+        LOG.infof("Buscando por Descriçao");
         return Response.ok(camisaService.findByDescricao(descricao)).build();
     }
 
     @PUT
     @Path("/{id}")
-    @RolesAllowed({"Funcionario"})
+    @RolesAllowed({ "Funcionario" })
     public Response update(@PathParam("id") Long id, CamisaDTO dto) {
-        camisaService.update(id, dto);
-        return Response.status(Status.NO_CONTENT).build();
+
+        LOG.infof("Iniciando Update de camisa");
+        try {
+            camisaService.update(id, dto);
+            Response response = Response.status(Status.NO_CONTENT).build();
+            LOG.infof("Update concluido");
+            return response;
+
+        } catch (Exception e) {
+            LOG.errorf("Erro no Update");
+            return null;
+        }
     }
 
     @DELETE
     @Path("/{id}")
-    @RolesAllowed({"Funcionario"})
+    @RolesAllowed({ "Funcionario" })
     public Response delete(@PathParam("id") Long id) {
-        camisaService.delete(id);
-        return Response.status(Status.NO_CONTENT).build();
+        LOG.infof("Iniciando o delete camisa");
+
+        try {
+            camisaService.delete(id);
+            Response response = Response.status(Status.NO_CONTENT).build();
+            LOG.infof("Camisa deletada");
+            return response;
+
+        } catch (Exception e) {
+            LOG.errorf("Erro ao deletar");
+            return null;
+        }
+
     }
 
     @POST
-    @RolesAllowed({"Funcionario"})
+    @RolesAllowed({ "Funcionario" })
     public Response create(@Valid CamisaDTO dto) {
-        return Response.status(Status.CREATED).entity(camisaService.create(dto)).build();
+        LOG.info("Iniciando Inserção de Camisa");
+        try {
+            Response response = Response.status(Status.CREATED).entity(camisaService.create(dto)).build();
+            LOG.info("Camisa Inserida");
+            return response;
+
+        } catch (Exception e) {
+            LOG.error("Erro ao Inserir");
+            return null;
+        }
     }
 
     @GET
     @Path("/{id}")
-    @RolesAllowed({"Funcionario", "Cliente"})
+    @RolesAllowed({ "Funcionario", "Cliente" })
     public Response findById(@PathParam("id") Long id) {
         return Response.ok(camisaService.findById(id)).build();
     }
 
-    
     @PATCH
     @Path("/{id}/image/upload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response upload(@PathParam("id") Long id, @MultipartForm ImageForm form){
+    public Response upload(@PathParam("id") Long id, @MultipartForm ImageForm form) {
+        LOG.info("Iniciando upload de imagem");
         fileService.salvar(id, form.getNomeImagem(), form.getImagem());
         return Response.noContent().build();
     }
@@ -96,7 +132,8 @@ public class CamisaResource {
     @GET
     @Path("/image/download/{nomeImagem}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response download(@PathParam("nomeImagem") String nomeImagem){
+    public Response download(@PathParam("nomeImagem") String nomeImagem) {
+        LOG.info("Iniciando download de imagem");
         fileService.download(nomeImagem);
         ResponseBuilder response = Response.ok(fileService.download(nomeImagem));
         response.header("Content-Disposition", "attachment; filename=" + nomeImagem);
