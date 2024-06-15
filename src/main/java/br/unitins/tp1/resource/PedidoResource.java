@@ -47,7 +47,7 @@ public class PedidoResource {
     }
 
     @GET
-    @RolesAllowed("Funcionario")
+    @RolesAllowed({"Funcionario","Cliente"})
     public Response findAll() {
         LOG.info("Executando FindAll");
         return Response.ok(pedidoService.findAll()).build();

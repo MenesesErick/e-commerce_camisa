@@ -122,6 +122,7 @@ public class CamisaResource {
 
     @PATCH
     @Path("/{id}/image/upload")
+    @RolesAllowed({ "Funcionario" })
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response upload(@PathParam("id") Long id, @MultipartForm ImageForm form) {
         LOG.info("Iniciando upload de imagem");
@@ -131,6 +132,7 @@ public class CamisaResource {
 
     @GET
     @Path("/image/download/{nomeImagem}")
+    @RolesAllowed({ "Funcionario", "Cliente" })
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response download(@PathParam("nomeImagem") String nomeImagem) {
         LOG.info("Iniciando download de imagem");

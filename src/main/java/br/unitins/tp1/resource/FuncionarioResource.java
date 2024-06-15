@@ -4,6 +4,7 @@ import org.jboss.logging.Logger;
 
 import br.unitins.tp1.dto.funcionario.FuncionarioDTO;
 import br.unitins.tp1.service.funcionario.FuncionarioService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -29,6 +30,7 @@ public class FuncionarioResource {
     private static final Logger LOG = Logger.getLogger(FuncionarioResource.class);
 
     @GET
+    @RolesAllowed({ "Funcionario" })
     public Response findAll() {
         LOG.infof("Executando finAll");
         return Response.ok(funcionarioService.findAll()).build();
@@ -36,6 +38,7 @@ public class FuncionarioResource {
 
     @GET
     @Path("/search/cargo/{cargo}")
+    @RolesAllowed({ "Funcionario" })
     public Response findByCargo(@PathParam("cargo") String cargo) {
         LOG.infof("Executando findByCargo");
         return Response.ok(funcionarioService.findByCargo(cargo)).build();
@@ -43,6 +46,7 @@ public class FuncionarioResource {
 
     @PUT
     @Path("/{id}")
+    @RolesAllowed({ "Funcionario" })
     public Response update(@PathParam("id") Long id, FuncionarioDTO dto) {
         LOG.infof("Executando update de funcionario");
         try {
@@ -59,6 +63,7 @@ public class FuncionarioResource {
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed({ "Funcionario" })
     public Response delete(@PathParam("id") Long id) {
         LOG.infof("Deletando funcionario");
         try {
@@ -74,6 +79,7 @@ public class FuncionarioResource {
     }
 
     @POST
+    @RolesAllowed({ "Funcionario" })
     public Response create(@Valid FuncionarioDTO dto) {
         LOG.infof("Criando funcionario");
         try {
@@ -89,6 +95,7 @@ public class FuncionarioResource {
 
     @GET
     @Path("/{id}")
+    @RolesAllowed({ "Funcionario" })
     public Response findById(@PathParam("id") Long id) {
         LOG.infof("Executando FindById");
         return Response.ok(funcionarioService.findById(id)).build();
