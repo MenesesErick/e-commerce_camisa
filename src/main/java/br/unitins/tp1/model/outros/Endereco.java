@@ -15,6 +15,8 @@ public class Endereco extends DefaultEntity {
     private String cidade;
     private String estado;
 
+
+    
     public String getCep() {
         return cep;
     }

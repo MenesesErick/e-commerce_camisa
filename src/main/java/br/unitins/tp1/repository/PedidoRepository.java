@@ -9,8 +9,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class PedidoRepository implements PanacheRepository<Pedido>{
 
-    public List<Pedido> findByCliente (Long idCliente){
-        return find ("UPPER(cliente.id) = ?1", idCliente).list();
-
+    public List<Pedido> findByCliente(Long clienteId) {
+        return find("upper(CAST(cliente.id AS string)) = ?1", clienteId.toString().toUpperCase()).list();
+    
     }
 }

@@ -33,6 +33,7 @@ public class ClienteResource {
     private static final Logger LOG = Logger.getLogger(ClienteResource.class);
 
     @GET
+    @RolesAllowed({ "Funcionario" })
     public Response findAll() {
         LOG.infof("Executando o findAll");
         return Response.ok(clienteService.findAll()).build();
@@ -48,6 +49,8 @@ public class ClienteResource {
 
     @PUT
     @Path("/{id}")
+    @RolesAllowed({ "Funcionario" })
+
     public Response update(@PathParam("id") Long id, ClienteDTO dto) {
         LOG.infof("Executando o Update");
 
@@ -82,6 +85,7 @@ public class ClienteResource {
     }
 
     @POST
+    @RolesAllowed({ "Funcionario" })
     public Response create(@Valid ClienteDTO dto) {
         LOG.infof("Iniciando Criação de Cliente");
         try {
@@ -96,6 +100,7 @@ public class ClienteResource {
 
     @PATCH
     @Path("/atualizarSenha/{id}")
+    @RolesAllowed({ "Funcionario","Cliente" })
     public Response atualizarSenha(@PathParam("id") Long id, AtualizarSenhaDTO dto) {
         LOG.info("Atualizando senha");
         clienteService.atualizarSenha(id, dto);
@@ -104,6 +109,7 @@ public class ClienteResource {
 
     @PATCH
     @Path("/atualizarUsername/{id}")
+    @RolesAllowed({ "Funcionario","Cliente" })
     public Response atualizarUsername(@PathParam("id") Long id, AtualizarUsernameDTO dto) {
         LOG.info("Atualizando username");
         clienteService.atualizarUsername(id, dto);
@@ -112,6 +118,7 @@ public class ClienteResource {
 
     @GET
     @Path("/{id}")
+    @RolesAllowed({ "Funcionario" })
     public Response findById(@PathParam("id") Long id) {
         LOG.infof("Buscando por Id");
         return Response.ok(clienteService.findById(id)).build();

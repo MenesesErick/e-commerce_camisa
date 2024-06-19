@@ -25,7 +25,7 @@ public class CadastroBasicoResource {
 
     @POST
     public Response create(@Valid CadastroDTO dto) {
-        LOG.info("Cadastrando um usuario.");
+        LOG.info("Cadastrando basico de um Cliente.");
         return Response.status(Response.Status.CREATED).entity(service.create(dto)).build();
     }
 }

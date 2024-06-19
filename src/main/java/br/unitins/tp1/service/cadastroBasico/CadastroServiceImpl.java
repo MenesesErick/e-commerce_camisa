@@ -19,7 +19,7 @@ public class CadastroServiceImpl implements CadastroService {
     @Inject
     ClienteRepository clienteRepository;
     @Inject
-    UsuarioRepository repository;
+    UsuarioRepository usuarioRepository;
     @Inject
     HashService hashService;
 
@@ -32,14 +32,12 @@ public class CadastroServiceImpl implements CadastroService {
         usuario.setUsername(dto.username());
         usuario.setSenha(hashService.getHashSenha(dto.senha()));
         usuario.setSexo(Sexo.valueOf(dto.idSexo()));
-
+        
+        usuarioRepository.persist(usuario);
         cliente.setUsuario(usuario);
-        cliente.setCpf(null);
-
-        repository.persist(usuario);
         clienteRepository.persist(cliente);
 
-        return CadastroResponseDTO.valueOf(usuario);
+        return CadastroResponseDTO.valueOf(cliente);
     }
 
 }

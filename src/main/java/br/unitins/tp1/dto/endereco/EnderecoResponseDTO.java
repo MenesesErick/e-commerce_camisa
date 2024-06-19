@@ -12,6 +12,9 @@ public record EnderecoResponseDTO(
         String estado) {
 
     public static EnderecoResponseDTO valueOf(Endereco endereco) {
+        if (endereco == null) {
+            return null;
+        }
         return new EnderecoResponseDTO(
                 endereco.getCep(),
                 endereco.getLogradouro(),
